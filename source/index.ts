@@ -4,8 +4,9 @@ import { join } from "path";
 
 import { wrap } from "./library/wrapper";
 import { DEFAULT_OPTIONS, Folder, Grouping, RuntimeOptions } from "./types";
-import { groupByExtension } from "./library/groupByExtension";
+import { groupByExtension, groupBySize } from "./library/group";
 import { createRuntimeError, distillGrouping } from "./library/utils";
+import { getFolder, getOptions } from "./library/cli";
 
 const { bold, blue, green, underline } = colors;
 
@@ -26,52 +27,29 @@ function start() {
    let folder = getFolder();
    let options = getOptions();
    let grouping: Grouping;
-   switch (options.groupingType) {
+   switch (options.by) {
       case "extension": {
-         grouping = groupByExtension(folder);
+         grouping = groupByExtension(folder, new Map());
+         break;
+      }
+      case "size": {
+         grouping = groupBySize(folder, new Map());
          break;
       }
       default: {
-         throw createRuntimeError("The grouping strategy was not specified.");
+         throw createRuntimeError(
+            `Unknown grouping strategy. There is no support for grouping by ${options.by}`
+         );
       }
    }
-   distillGrouping(grouping, folder.path);
+   let outputFolder = options.target || folder.path;
+   distillGrouping(grouping, outputFolder);
    let noOfFiles = folder.entries.length;
    let noOfFolders = grouping.groups.size;
    let pluralFile = noOfFiles == 1 ? "" : "s";
    let pluralFolder = noOfFolders == 1 ? "" : "s";
    let finalMessage = `🧹 ${noOfFiles} file${pluralFile} grouped by ${grouping.type} into ${noOfFolders} folder${pluralFolder}.`;
    console.log(blue(finalMessage));
-}
-
-function getFolder(): Folder {
-   const args = process.argv.slice(2);
-   let folderPath = args[0];
-   if (folderPath === undefined || folderPath.startsWith("--")) {
-      throw createRuntimeError(
-         "The folder to group was not specified.",
-         'The correct command format is "gather <folderPath> [...options]"'
-      );
-   }
-   let absolutePath = join(process.cwd(), folderPath);
-   if (!existsSync(absolutePath)) {
-      throw createRuntimeError(
-         `The folder to group does not exist.`,
-         `Folder specified: ${absolutePath}`
-      );
-   }
-   if (!lstatSync(absolutePath).isDirectory()) {
-      throw createRuntimeError(`${folderPath} does not refer to a folder.`);
-   }
-   const folder: Folder = {
-      path: absolutePath,
-      entries: readdirSync(absolutePath),
-   };
-   return folder;
-}
-
-function getOptions(): RuntimeOptions {
-   return DEFAULT_OPTIONS;
 }
 
 wrap(start);

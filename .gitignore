@@ -10,9 +10,11 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# Caches 
+# Caches
 
 .cache
+
+testFolder
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 

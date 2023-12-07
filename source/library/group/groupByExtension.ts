@@ -1,17 +1,14 @@
 import { extname, join } from "path";
-import { Folder, Grouping } from "../types";
-import { PathLike, lstatSync } from "fs";
-import { warnings } from "./warnings";
+import { Grouping, Grouper } from "../../types";
+import { lstatSync } from "fs";
 
 /**
- * Takes in a list of files and returns a grouping
- * of them according to their file extensions.
- * @param
+ * Takes in a list of files, and arranges them
+ * according to their file extensions into a grouping.
+ * @param folder The folder to organize.
  */
-export function groupByExtension(folder: Folder): Grouping {
-   let groups: Map<string, PathLike[]> = new Map();
+export const groupByExtension: Grouper = (folder, map) => {
    let folders = [];
-
    for (const path of folder.entries) {
       let fullEntryPath = join(folder.path, path);
       let stats = lstatSync(fullEntryPath);
@@ -19,11 +16,11 @@ export function groupByExtension(folder: Folder): Grouping {
          folders.push(path);
       } else {
          let extension = extname(path.toString()).slice(1);
-         if (groups.has(extension)) {
-            groups.get(extension)?.push(fullEntryPath);
+         if (map.has(extension)) {
+            map.get(extension)?.push(fullEntryPath);
          } else {
             let group = [fullEntryPath];
-            groups.set(extension, group);
+            map.set(extension, group);
          }
       }
    }
@@ -34,6 +31,6 @@ export function groupByExtension(folder: Folder): Grouping {
    // }
    return {
       type: "extension",
-      groups,
-   };
-}
+      groups: map,
+   } as Grouping;
+};

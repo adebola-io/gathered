@@ -35,6 +35,7 @@ export function distillGrouping(grouping: Grouping, targetFolder: PathLike) {
    };
    let pattern = new Pattern(grouping.type);
    for (const [key, files] of grouping.groups.entries()) {
+      if (files.length == 0) continue;
       let newFolder = createSubFolder(pattern.stringify(key));
       for (const file of files) {
          let baseName = basename(file.toString());
@@ -47,7 +48,8 @@ class Pattern {
    constructor(private type: GroupType) {}
    stringify(key: string): string {
       switch (this.type) {
-         case "extension": {
+         case "extension":
+         case "size": {
             return `${key[0].toUpperCase() + key.slice(1)} files`;
          }
          default: {

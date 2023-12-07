@@ -27,13 +27,25 @@ export class RuntimeWarning {
 }
 
 export interface RuntimeOptions {
-   groupingType: GroupType;
+   by: GroupType;
+   recursive: boolean;
+   target?: PathLike;
 }
 export const DEFAULT_OPTIONS: RuntimeOptions = {
-   groupingType: "extension",
+   by: "extension",
+   recursive: false,
 };
 
 export interface Grouping {
    type: GroupType;
    groups: Map<string, PathLike[]>;
+}
+
+/**
+ * A function that takes in a folder
+ * and groups its files based on a particular
+ * grouping strategy.
+ */
+export interface Grouper {
+   (folder: Folder, map: Map<String, PathLike[]>): Grouping;
 }
