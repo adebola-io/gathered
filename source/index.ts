@@ -1,6 +1,6 @@
-import { green } from "colors";
+import { bold, cyan, green, underline } from "colors";
 import { existsSync, lstatSync, readdirSync } from "fs";
-import path from "path";
+import { join } from "path";
 
 import { wrap } from "./library/wrapper";
 import { DEFAULT_OPTIONS, Folder, Grouping, RuntimeOptions } from "./types";
@@ -12,33 +12,46 @@ import { createRuntimeError, distillGrouping } from "./library/utils";
  * It parses the command line arguments and initiates commands based on them.
  */
 function start() {
+   const args = process.argv.slice(2);
+   if (args.length === 0) {
+      let gather = underline(bold(cyan("Gathered")));
+      let firstline = `${gather} (v0.0.1) is a command line tool for organizing files. 🎁`;
+      let secondLine = bold(`Usage: gather <folderPath> [..options]`);
+      console.log(firstline);
+      console.log(secondLine);
+      return;
+   }
    let folder = getFolder();
    let options = getOptions();
    let grouping: Grouping;
    switch (options.groupingType) {
-      case "extension":
-      default: {
+      case "extension": {
          grouping = groupByExtension(folder);
          break;
+      }
+      default: {
+         throw createRuntimeError("The grouping strategy was not specified.");
       }
    }
    distillGrouping(grouping, folder.path);
    let noOfFiles = folder.entries.length;
-   let noOfFolder = grouping.groups.keys.length;
-   let finalMessage = `${noOfFiles} files grouped by ${grouping.type} into ${noOfFolder} folders.`;
+   let noOfFolders = grouping.groups.keys.length;
+   let pluralFile = noOfFiles == 1 ? "" : "s";
+   let pluralFolder = noOfFolders == 1 ? "" : "s";
+   let finalMessage = `🧹 ${noOfFiles} file${pluralFile} grouped by ${grouping.type} into ${noOfFolders} folder${pluralFolder}.`;
    console.log(green(finalMessage));
 }
 
 function getFolder(): Folder {
    const args = process.argv.slice(2);
    let folderPath = args[0];
-   if (folderPath == undefined) {
+   if (folderPath === undefined || folderPath.startsWith("--")) {
       throw createRuntimeError(
          "The folder to group was not specified.",
          'The correct command format is "gather <folderPath> [...options]"'
       );
    }
-   let absolutePath = path.join(__dirname, folderPath);
+   let absolutePath = join(__dirname, folderPath);
    if (!existsSync(absolutePath)) {
       throw createRuntimeError(
          `The folder to group does not exist.`,

@@ -1,7 +1,9 @@
 {
    "name": "gathered",
    "bin": "source/index.ts",
-   "type": "module",
+   "scripts": {
+      "build": "tsc"
+   },
    "devDependencies": {
       "bun-types": "latest"
    },

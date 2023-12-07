@@ -1,3 +1,4 @@
+import { bgRed, blue, bold, red } from "colors";
 import { RunTimeError } from "../types";
 
 /**
@@ -14,6 +15,7 @@ export function wrap(entry: () => void) {
       } else {
          let error = err as unknown as Error;
          logError(new RunTimeError(error.message));
+         console.log(error.stack);
       }
    }
 }
@@ -22,13 +24,13 @@ export function wrap(entry: () => void) {
  * Logs an error to the terminal output.
  */
 function logError({ error, additionalInfo }: RunTimeError) {
-   let firstLine = "An error occured.";
-   let secondLine = `${" ERROR ".bgRed.bold} ${error.message.red}`;
+   let firstLine = red("❌ An error occured.");
+   let secondLine = `${bold(bgRed(" ERROR "))} ${red(error.message)}`;
    console.error(firstLine);
    console.error(secondLine);
    if (additionalInfo.length > 0) {
       for (const info of additionalInfo) {
-         console.log(info.blue);
+         console.log(blue(info));
       }
    }
 }
