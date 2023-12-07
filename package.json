@@ -1,0 +1,15 @@
+{
+   "name": "gathered",
+   "bin": "source/index.ts",
+   "type": "module",
+   "devDependencies": {
+      "bun-types": "latest"
+   },
+   "peerDependencies": {
+      "typescript": "^5.0.0"
+   },
+   "dependencies": {
+      "@types/node": "^20.10.4",
+      "colors": "^1.4.0"
+   }
+}
