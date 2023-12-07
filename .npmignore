@@ -1,0 +1,5 @@
+source/*
+source/index.ts
+!dist
+!package.json
+!README.md

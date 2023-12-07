@@ -1,4 +1,4 @@
-import { bold, cyan, green, underline } from "colors";
+import { bold, green, underline } from "colors";
 import { existsSync, lstatSync, readdirSync } from "fs";
 import { join } from "path";
 
@@ -14,7 +14,7 @@ import { createRuntimeError, distillGrouping } from "./library/utils";
 function start() {
    const args = process.argv.slice(2);
    if (args.length === 0) {
-      let gather = underline(bold(cyan("Gathered")));
+      let gather = underline(bold(green("Gathered")));
       let firstline = `${gather} (v0.0.1) is a command line tool for organizing files. 🎁`;
       let secondLine = bold(`Usage: gather <folderPath> [..options]`);
       console.log(firstline);

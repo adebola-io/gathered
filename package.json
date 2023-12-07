@@ -1,6 +1,21 @@
 {
    "name": "gathered",
-   "bin": "source/index.ts",
+   "description": "A tool for organizing files. 🧩⚖️",
+   "version": "0.0.1",
+   "main": "dist/index.js",
+   "bin": {
+      "gather": "dist/index.js",
+      "gathered": "dist/index.js"
+   },
+   "author": "Adebola Akomolafe",
+   "license": "ISC",
+   "keywords": [
+      "cli",
+      "bundler",
+      "gathered",
+      "filesystem",
+      "typescript"
+   ],
    "scripts": {
       "build": "tsc"
    },
@@ -13,5 +28,13 @@
    "dependencies": {
       "@types/node": "^20.10.4",
       "colors": "^1.4.0"
-   }
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/adebola-xyz/gathered.git"
+   },
+   "bugs": {
+      "url": "https://github.com/adebola-xyz/gathered/issues"
+   },
+   "homepage": "https://github.com/adebola-xyz/gathered#readme"
 }

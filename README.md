@@ -4,6 +4,12 @@ Gathered is a simple command line tool for organizing the files in a directory.
 
 ## Usage
 
+Install the tool globally using
+
+```
+npm install -g gathered
+```
+
 Simply pass in the path to the folder to sort:
 
 ```
