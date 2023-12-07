@@ -5,7 +5,6 @@ import {
    mkdirSync,
    readdirSync,
    renameSync,
-   stat,
 } from "fs";
 import { GroupType, Grouping, RunTimeError } from "../types";
 import { basename, isAbsolute, join } from "path";
@@ -31,17 +30,7 @@ export function createRuntimeError(
  * @param grouping the grouping to distill.
  */
 export function distillGrouping(grouping: Grouping, target: PathLike) {
-   let targetFolder = target.toString();
-   if (!isAbsolute(targetFolder)) {
-      targetFolder = join(process.cwd(), target.toString());
-   }
-   if (existsSync(targetFolder)) {
-      if (!lstatSync(targetFolder).isDirectory()) {
-         throw createRuntimeError(
-            `The target specified does not refer to a folder.`
-         );
-      }
-   } else mkdirSync(targetFolder);
+   let targetFolder = folderToAbsolutePath(target);
    const createSubFolder = (pathname: string) => {
       let newFolderPath = join(targetFolder.toString(), pathname);
       newFolderPath = mkDirOrGetExisting(newFolderPath);
@@ -61,6 +50,21 @@ export function distillGrouping(grouping: Grouping, target: PathLike) {
 type GetFilesOptions = {
    recursive?: boolean;
 };
+
+export function folderToAbsolutePath(target: PathLike) {
+   let targetFolder = target.toString();
+   if (!isAbsolute(targetFolder)) {
+      targetFolder = join(process.cwd(), target.toString());
+   }
+   if (existsSync(targetFolder)) {
+      if (!lstatSync(targetFolder).isDirectory()) {
+         throw createRuntimeError(
+            `The target specified does not refer to a folder.`
+         );
+      }
+   } else mkdirSync(targetFolder);
+   return targetFolder;
+}
 
 /**
  * Creates a folder, iff the folder does not already exist.

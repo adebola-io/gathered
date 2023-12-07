@@ -5,6 +5,7 @@ import { groupByExtension, groupBySize, groupByType } from "./library/group";
 import {
    createRuntimeError,
    distillGrouping,
+   folderToAbsolutePath,
    getAllFiles,
    move,
 } from "./library/utils";
@@ -84,6 +85,7 @@ export function ungather() {
    let outputFolder = options.target || folder.path;
 
    let files = getAllFiles(folder.path, { recursive: options.recursive });
+   outputFolder = folderToAbsolutePath(outputFolder);
    for (const file of files) {
       move(file, outputFolder);
    }
