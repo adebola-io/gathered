@@ -7,13 +7,15 @@ import { existsSync, lstatSync, readdirSync } from "fs";
  * Utility function to retrieve the folder name from the
  * command line arguments.
  */
-export function getFolder(): Folder {
+export function getFolder(mode: 1 | 2): Folder {
    const args = process.argv.slice(2);
    let folderPath = args[0];
    if (folderPath === undefined || folderPath.startsWith("--")) {
+      let correctFormat =
+         (mode == 1 ? "gather" : "ungather") + " <folderPath> [...options]";
       throw createRuntimeError(
          "The folder to group was not specified.",
-         'The correct command format is "gather <folderPath> [...options]"'
+         `The correct command format is ${correctFormat}`
       );
    }
    let absolutePath = join(process.cwd(), folderPath);
@@ -43,7 +45,7 @@ const SUPPORTED_OPTIONS = [
  * Utility function to retrieve the options
  * from the command line arguments.
  */
-export function getOptions(): RuntimeOptions {
+export function getOptions(mode: 1 | 2): RuntimeOptions {
    const args = process.argv.slice(3);
    let options = {} as RuntimeOptions;
    for (const argument of args) {
@@ -66,6 +68,23 @@ export function getOptions(): RuntimeOptions {
             throw createRuntimeError(`Duplicate option --${argname}.`);
          } else {
             (options as any)[argname] = argvalue;
+            switch (argname) {
+               case "recursive": {
+                  if (!/true|false/.test(argvalue)) {
+                     throw createRuntimeError(
+                        "Unrecognized value for command --recursive",
+                        "The supported values are --recursive=true and --recursive=false."
+                     );
+                  }
+                  break;
+               }
+               case "by":
+                  if (mode === 2) {
+                     throw createRuntimeError(
+                        '--by can only be used for gathering with the "gather" command.'
+                     );
+                  }
+            }
          }
       } else {
          throw createRuntimeError(

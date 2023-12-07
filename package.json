@@ -4,7 +4,8 @@
    "version": "0.0.1",
    "main": "dist/index.js",
    "bin": {
-      "gather": "bin/index"
+      "gather": "bin/gather",
+      "ungather": "bin/ungather"
    },
    "author": "Adebola Akomolafe",
    "license": "ISC",
