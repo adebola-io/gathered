@@ -1,7 +1,7 @@
 {
    "name": "gathered",
    "description": "A tool for organizing files. 🧩⚖️",
-   "version": "0.0.1",
+   "version": "0.0.2",
    "main": "dist/index.js",
    "bin": {
       "gather": "bin/gather",
