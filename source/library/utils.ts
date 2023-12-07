@@ -52,6 +52,8 @@ class Pattern {
          case "size": {
             return `${key[0].toUpperCase() + key.slice(1)} files`;
          }
+         case "type":
+            return key;
          default: {
             throw createRuntimeError("No pattern type defined.");
          }

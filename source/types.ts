@@ -1,6 +1,13 @@
 import { PathLike } from "fs";
 
-export type GroupType = "extension" | "size" | "date-modified";
+export type GroupType = "extension" | "size" | "type" | "date-modified";
+export type FileType =
+   | "Images"
+   | "Documents"
+   | "Source Files"
+   | "Videos"
+   | "Music"
+   | "Other";
 
 export interface File {
    absolutePath: string;
@@ -47,5 +54,5 @@ export interface Grouping {
  * grouping strategy.
  */
 export interface Grouper {
-   (folder: Folder, map: Map<String, PathLike[]>): Grouping;
+   (folder: Folder, map: Map<string, PathLike[]>): Grouping;
 }

@@ -4,7 +4,7 @@ import { join } from "path";
 
 import { wrap } from "./library/wrapper";
 import { DEFAULT_OPTIONS, Folder, Grouping, RuntimeOptions } from "./types";
-import { groupByExtension, groupBySize } from "./library/group";
+import { groupByExtension, groupBySize, groupByType } from "./library/group";
 import { createRuntimeError, distillGrouping } from "./library/utils";
 import { getFolder, getOptions } from "./library/cli";
 
@@ -27,13 +27,18 @@ function start() {
    let folder = getFolder();
    let options = getOptions();
    let grouping: Grouping;
+   let map = new Map();
    switch (options.by) {
       case "extension": {
-         grouping = groupByExtension(folder, new Map());
+         grouping = groupByExtension(folder, map);
          break;
       }
       case "size": {
-         grouping = groupBySize(folder, new Map());
+         grouping = groupBySize(folder, map);
+         break;
+      }
+      case "type": {
+         grouping = groupByType(folder, map);
          break;
       }
       default: {
@@ -44,7 +49,11 @@ function start() {
    }
    let outputFolder = options.target || folder.path;
    distillGrouping(grouping, outputFolder);
-   let noOfFiles = folder.entries.length;
+
+   let noOfFiles = 0;
+   for (const values of grouping.groups.values()) {
+      noOfFiles += values.length;
+   }
    let noOfFolders = grouping.groups.size;
    let pluralFile = noOfFiles == 1 ? "" : "s";
    let pluralFolder = noOfFolders == 1 ? "" : "s";
