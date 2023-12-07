@@ -1,5 +1,6 @@
 source/*
 source/index.ts
+bun.lockdb
 tsconfig.json
 !dist
 !package.json
