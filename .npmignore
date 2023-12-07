@@ -1,5 +1,6 @@
 source/*
 source/index.ts
+tsconfig.json
 !dist
 !package.json
 !README.md

@@ -1,4 +1,4 @@
-import { bold, green, underline } from "colors";
+import * as colors from "colors";
 import { existsSync, lstatSync, readdirSync } from "fs";
 import { join } from "path";
 
@@ -6,6 +6,8 @@ import { wrap } from "./library/wrapper";
 import { DEFAULT_OPTIONS, Folder, Grouping, RuntimeOptions } from "./types";
 import { groupByExtension } from "./library/groupByExtension";
 import { createRuntimeError, distillGrouping } from "./library/utils";
+
+const { bold, blue, green, underline } = colors;
 
 /**
  * Entry into the program.
@@ -35,11 +37,11 @@ function start() {
    }
    distillGrouping(grouping, folder.path);
    let noOfFiles = folder.entries.length;
-   let noOfFolders = grouping.groups.keys.length;
+   let noOfFolders = grouping.groups.size;
    let pluralFile = noOfFiles == 1 ? "" : "s";
    let pluralFolder = noOfFolders == 1 ? "" : "s";
    let finalMessage = `🧹 ${noOfFiles} file${pluralFile} grouped by ${grouping.type} into ${noOfFolders} folder${pluralFolder}.`;
-   console.log(green(finalMessage));
+   console.log(blue(finalMessage));
 }
 
 function getFolder(): Folder {
@@ -51,7 +53,7 @@ function getFolder(): Folder {
          'The correct command format is "gather <folderPath> [...options]"'
       );
    }
-   let absolutePath = join(__dirname, folderPath);
+   let absolutePath = join(process.cwd(), folderPath);
    if (!existsSync(absolutePath)) {
       throw createRuntimeError(
          `The folder to group does not exist.`,

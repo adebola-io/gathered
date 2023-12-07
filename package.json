@@ -1,11 +1,10 @@
 {
    "name": "gathered",
    "description": "A tool for organizing files. 🧩⚖️",
-   "version": "0.0.1",
+   "version": "0.0.0",
    "main": "dist/index.js",
    "bin": {
-      "gather": "dist/index.js",
-      "gathered": "dist/index.js"
+      "gather": "bin/index"
    },
    "author": "Adebola Akomolafe",
    "license": "ISC",
@@ -18,12 +17,6 @@
    ],
    "scripts": {
       "build": "tsc"
-   },
-   "devDependencies": {
-      "bun-types": "latest"
-   },
-   "peerDependencies": {
-      "typescript": "^5.0.0"
    },
    "dependencies": {
       "@types/node": "^20.10.4",

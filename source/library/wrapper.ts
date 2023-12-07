@@ -1,5 +1,7 @@
-import { bgRed, blue, bold, red } from "colors";
+import * as colors from "colors";
 import { RunTimeError } from "../types";
+
+const { blue, bold, red, bgRed } = colors;
 
 /**
  * A safe wrapper around the running program to catch errors.
